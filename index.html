@@ -4,11 +4,10 @@
     <title>Mein Countdown</title>
     <style>
         .gif-container {
-            width: 60%;
+            width: 60%; /* Adjust as needed */
             margin: auto;
             position: relative;
-            height: 80vh;
-            background-image: url('bunny-cute.gif');
+            height: 80vh; /* Adjust as needed */
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
@@ -42,70 +41,63 @@
             }
         }
 
-        #love-button {
+        .button {
             position: fixed;
             bottom: 20px;
-            right: 20px;
-            padding: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
             font-size: 18px;
             cursor: pointer;
-        }
-
-        #heart {
-            position: absolute;
-            display: none;
-            width: 100px;
-            height: auto;
-            bottom: 50px;
-            right: 50px;
         }
     </style>
 </head>
 <body>
-    <div class="gif-container">
-        <img id="expiredImage" style="display:none; width:100%; height:100%;" src="" alt="Expired Image">
+    <div class="gif-container" style="background-image: url('bunny.gif');"> <!-- Initial GIF -->
         <div id="countdown"></div>
     </div>
-    <button id="love-button">Show Love</button>
-    <img id="heart" src="heart.png" alt="Heart">
+    <button id="change-gif-button" class="button">Change GIF</button>
 
     <script>
         var countDownDate = new Date("Oct 27, 2023 22:59:59").getTime();
-
+        var gifContainer = document.querySelector('.gif-container');
         var countdownfunction = setInterval(function() {
-            var now = new Date().getTime();
-            var distance = countDownDate - now;
 
+            var now = new Date().getTime();
+            
+            var distance = countDownDate - now;
+            
             var days = Math.floor(distance / (1000 * 60 * 60 * 24));
             var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById("countdown").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
-
+            
+            document.getElementById("countdown").innerHTML = days + "d " + hours + "h "
+            + minutes + "m " + seconds + "s ";
+            
             if (distance < 0) {
                 clearInterval(countdownfunction);
-                document.getElementById("countdown").style.display = 'none'; // Hide countdown
-                var expiredImage = document.getElementById("expiredImage");
-                expiredImage.style.display = 'block'; // Show expired image
-                expiredImage.src = 'another-image.png'; // Set the image source for the expired state
+                document.getElementById("countdown").innerHTML = "EXPIRED";
+                gifContainer.style.backgroundImage = "url('5.gif')"; // REPLACE WITH YOUR EXPIRED GIF
             }
         }, 1000);
 
         document.addEventListener('DOMContentLoaded', function () {
-            var loveButton = document.getElementById('love-button');
-            var heart = document.getElementById('heart');
+            var changeGifButton = document.getElementById('change-gif-button');
+            var gifs = [
+                "bunny.gif", // REPLACE WITH YOUR BUNNY GIF
+                "2.gif", // REPLACE WITH YOUR SECOND GIF
+                "3 gif", // REPLACE WITH YOUR THIRD GIF
+                "4 gif" // REPLACE WITH YOUR FOURTH GIF
+            ];
+            var currentGifIndex = 0;
 
-            loveButton.addEventListener('mousedown', function() {
-                heart.style.display = 'block';
-            });
-
-            loveButton.addEventListener('mouseup', function() {
-                heart.style.display = 'none';
-            });
-
-            loveButton.addEventListener('mouseout', function() {
-                heart.style.display = 'none';
+            changeGifButton.addEventListener('click', function() {
+                currentGifIndex++;
+                if (currentGifIndex >= gifs.length) {
+                    currentGifIndex = 0;
+                }
+                gifContainer.style.backgroundImage = 'url(' + gifs[currentGifIndex] + ')';
             });
         });
     </script>
