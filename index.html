@@ -3,17 +3,27 @@
 <head>
     <title>Mein Countdown</title>
     <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: black; /* In case the gif doesn't cover the entire page */
+        }
+
         .gif-container {
-            width: 60%; /* Adjust as needed */
-            margin: auto;
-            position: relative;
-            height: 80vh; /* Adjust as needed */
-            background-size: contain;
+            width: 100vw; /* Makes the container take the full width */
+            height: 100vh; /* Makes the container take the full height */
+            position: relative; /* Needed for absolute positioning of children */
+            background-size: cover; /* Makes the background image cover the entire container */
             background-repeat: no-repeat;
             background-position: center;
             display: flex;
-            align-items: flex-end;
-            justify-content: center;
+            align-items: center; /* Vertical centering */
+            justify-content: center; /* Horizontal centering */
         }
 
         #countdown {
@@ -42,63 +52,49 @@
         }
 
         .button {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            position: absolute; /* Absolute positioning with respect to the parent container */
+            top: 10px; /* Adjust as needed */
+            right: 10px; /* Adjust as needed */
             padding: 10px 20px;
             font-size: 18px;
             cursor: pointer;
+            z-index: 100; /* Make sure the button is above everything else */
         }
     </style>
 </head>
 <body>
-    <div class="gif-container" style="background-image: url('bunny.gif');"> <!-- Initial GIF -->
+    <div class="gif-container" id="gif-container" style="background-image: url('bunny.gif');">
         <div id="countdown"></div>
+        <button id="change-gif-button" class="button">Current Mood</button>
     </div>
-    <button id="change-gif-button" class="button">Change GIF</button>
 
     <script>
         var countDownDate = new Date("Oct 27, 2023 22:59:59").getTime();
-        var gifContainer = document.querySelector('.gif-container');
-        var countdownfunction = setInterval(function() {
+        var gifs = ['bunny.gif', '2.gif', '3.gif', '4.gif']; // Your GIF filenames
+        var expiredGif = '5.gif'; // Your expired GIF filename
+        var currentGif = 0;
 
+        var countdownfunction = setInterval(function() {
             var now = new Date().getTime();
-            
             var distance = countDownDate - now;
-            
+
             var days = Math.floor(distance / (1000 * 60 * 60 * 24));
             var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var minutes = Math floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            
-            document.getElementById("countdown").innerHTML = days + "d " + hours + "h "
-            + minutes + "m " + seconds + "s ";
-            
+
+            document.getElementById("countdown").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+
             if (distance < 0) {
                 clearInterval(countdownfunction);
                 document.getElementById("countdown").innerHTML = "EXPIRED";
-                gifContainer.style.backgroundImage = "url('5.gif')"; // REPLACE WITH YOUR EXPIRED GIF
+                document.getElementById("gif-container").style.backgroundImage = "url('" + expiredGif + "')";
             }
         }, 1000);
 
-        document.addEventListener('DOMContentLoaded', function () {
-            var changeGifButton = document.getElementById('change-gif-button');
-            var gifs = [
-                "bunny-cute.gif", // REPLACE WITH YOUR BUNNY GIF
-                "2.gif", // REPLACE WITH YOUR SECOND GIF
-                "3.gif", // REPLACE WITH YOUR THIRD GIF
-                "4.gif" // REPLACE WITH YOUR FOURTH GIF
-            ];
-            var currentGifIndex = 0;
-
-            changeGifButton.addEventListener('click', function() {
-                currentGifIndex++;
-                if (currentGifIndex >= gifs.length) {
-                    currentGifIndex = 0;
-                }
-                gifContainer.style.backgroundImage = 'url(' + gifs[currentGifIndex] + ')';
-            });
+        document.getElementById("change-gif-button").addEventListener("click", function() {
+            currentGif = (currentGif + 1) % gifs.length; // Move to the next gif, loop back after the last one
+            document.getElementById("gif-container").style.backgroundImage = "url('" + gifs[currentGif] + "')";
         });
     </script>
 </body>
